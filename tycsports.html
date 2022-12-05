@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<body style="background-color: rgba(3,50,70,1) ; color: #000000 ; ">
+</body>
+
+
+<!-- Shaka Player compiled library: -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.4/shaka-player.ui.min.js"></script>
+    <!-- Shaka Player ui compiled library default CSS: -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/3.0.4/controls.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/shaka-player@2.5.11/dist/shaka-player.compiled.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/mux.js@5.6.2/dist/mux.min.js"></script>
+
+
+
+</head>
+
+
+<body>
+<video id="video"
+width="100%"
+controls autoplay></video>
+</body>
+
+
+
+<script>
+
+var manifestUri = "https://cdn-lumen01.sensa.com.ar/live/eds/TYCSports/live_dash_cld/TYCSports.mpd";
+
+function initApp() {
+
+shaka.polyfill.installAll();
+
+  if (shaka.Player.isBrowserSupported()) {
+
+initPlayer();
+} else {
+
+console.error('Browser not supported!');
+}
+}
+
+
+function initPlayer() {
+
+var video = document.getElementById('video');
+var player = new shaka.Player(video);
+
+window.player = player;
+
+
+player.configure({
+drm: {
+    servers: {
+      'com.widevine.alpha': 'https://mrpw.pt.verspective.net/?deviceId=NjVkMGM0Y2FkYjhkMzdiZjdjZjBhODAwY2IwMTg2NTg5YzU0Y2MwMQ',
+      'com.microsoft.playready': 'https://foo.bar/drm/playready'
+    }
+  }
+});
+
+
+player.addEventListener('error', onErrorEvent);
+
+player.load(manifestUri).then(function() {
+
+console.log('The video has now been loaded!');
+}).catch(onError);
+}
+
+function onErrorEvent(event) {
+
+onError(event.detail);
+}
+
+function onError(error) {
+
+console.error('Error code', error.code, 'object', error);
+}
+
+
+document.addEventListener('DOMContentLoaded', initApp);
+</script>
+
+</html>
